@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: php8.2
+    ports:
+      - 8000:80
+    volumes:
+      - ./php:/var/www/html
+    build:
+      context: .
+      dockerfile: Dockerfile
+  db:
+    container_name: mysql8.2
+    image: mysql:8.0.2
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: demo
+      MYSQL_USER: root
+      MYSQL_PASSWORD: pass
+    volumes:
+      - ./mysql:/var/lib/mysql
+  pma:
+    container_name: pma
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8899:80
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: demo
+      MYSQL_USER: test
+      MYSQL_PASSWORD: pass
+      UPLOAD_LIMIT: 20M
